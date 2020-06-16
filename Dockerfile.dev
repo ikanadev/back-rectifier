@@ -1,0 +1,15 @@
+FROM golang:1.14
+
+ARG urldb
+WORKDIR /app
+COPY go.mod /app
+COPY go.sum /app
+RUN go mod download
+COPY . /app
+RUN go get github.com/githubnemo/CompileDaemon
+
+# RUN cd cmd/migration && DATABASE_URL=${urldb} go run main.go && cd ../../
+
+EXPOSE 8080
+
+ENTRYPOINT CompileDaemon --build="go build -o main cmd/api/main.go" --command=./main

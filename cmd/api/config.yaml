@@ -1,0 +1,14 @@
+database:
+  logQueries: true
+  timeoutSeconds: 5
+server:
+  port: 8080
+  debug: true
+  readTimeoutSeconds: 10
+  writeTimeoutSeconds: 5
+jwt:
+  durationMinutes: 432000
+  refreshDurationMinutes: 432000
+  maxRefreshMinutes: 1440
+  signingAlgorithm: HS256
+  minSecretLength: 64

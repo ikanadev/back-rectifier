@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+  rectifierdb:
+    image: postgres:12.2
+    container_name: rectifierdb
+    environment: 
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    expose: 
+      - 5432
+    ports: 
+      - "5432:5432"
+    networks:
+      - rectifier_net
+  rectifier_api_prod:
+    container_name: rectifier_api_prod
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    depends_on: 
+      - rectifierdb
+    networks:
+      - rectifier_net
+    ports: 
+      - 8080:8080
+  rectifier_api_dev:
+    container_name: rectifier_api_dev
+    env_file: .env
+    environment:
+      - POSTGRES_HOST=rectifierdb
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on: 
+      - rectifierdb
+    networks: 
+      - rectifier_net
+    ports: 
+      - 8080:8080
+    volumes:
+      - .:/app
+networks:
+  rectifier_net:
+    driver: bridge
