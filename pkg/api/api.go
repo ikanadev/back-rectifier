@@ -4,6 +4,7 @@ import (
 	"github.com/vkevv/back-rectifier/pkg/api/auth"
 	"github.com/vkevv/back-rectifier/pkg/api/common"
 	"github.com/vkevv/back-rectifier/pkg/api/document"
+	"github.com/vkevv/back-rectifier/pkg/api/observation"
 	"github.com/vkevv/back-rectifier/pkg/api/project"
 	"github.com/vkevv/back-rectifier/pkg/config"
 	"github.com/vkevv/back-rectifier/pkg/jwt"
@@ -52,6 +53,9 @@ func StartAPI(conf config.Config) error {
 
 	documentService := document.LoadDocumentService(dbActions, &s3Actions)
 	document.ServeHTTP(&documentService, authGin)
+
+	observationService := observation.LoadObservationService(dbActions)
+	observation.ServeHTTP(&observationService, authGin)
 
 	if err := server.Start(conf.Server, gin); err != nil {
 		return err

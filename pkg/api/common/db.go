@@ -102,3 +102,22 @@ func (d DB) GetDocumentByID(documentID int) (models.Document, error) {
 	err := d.db.Select(&document)
 	return document, err
 }
+
+// InsertObservation insert an observation
+func (d DB) InsertObservation(obs *models.Observation) error {
+	return d.db.Insert(obs)
+}
+
+// GetDocumentObs get all observations of a document
+func (d DB) GetDocumentObs(documentID int) ([]models.Observation, error) {
+	observations := make([]models.Observation, 0)
+	err := d.db.Model(&observations).Where("document_id = ?", documentID).Order("y ASC").Select()
+	return observations, err
+}
+
+// DeleteObservation deletes an observation
+func (d DB) DeleteObservation(obsID int) error {
+	observation := models.Observation{}
+	observation.ID = obsID
+	return d.db.Delete(&observation)
+}

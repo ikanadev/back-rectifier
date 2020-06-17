@@ -65,3 +65,19 @@ func ErrorResp(c *gin.Context, err error) {
 	}
 	c.JSON(http.StatusInternalServerError, errorResp)
 }
+
+// GetURIID gets the id of an uri
+func GetURIID(c *gin.Context) (int, error) {
+	type uriVars struct {
+		ID string `uri:"id" binding:"required"`
+	}
+	uriParams := uriVars{}
+	if err := c.ShouldBindUri(&uriParams); err != nil {
+		return 0, err
+	}
+	ID, err := strconv.Atoi(uriParams.ID)
+	if err != nil {
+		return 0, err
+	}
+	return ID, nil
+}
