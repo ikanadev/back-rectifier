@@ -1,10 +1,9 @@
 package auth
 
 import (
-	"errors"
-
 	"github.com/gin-gonic/gin"
 	"github.com/vkevv/back-rectifier/pkg"
+	"github.com/vkevv/back-rectifier/pkg/api/common"
 	"github.com/vkevv/back-rectifier/pkg/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,14 +16,11 @@ const (
 var (
 	errExistEmail     = pkg.NewAPIErr("Provided email is already in use", registerEmailExists)
 	errBadCredentials = pkg.NewAPIErr("Email or password doesn't match", loginBadCredentials)
-
-	errNoContextID      = errors.New("Cannot read ID in context (missing token?)")
-	errContextIDInvalid = errors.New("Context ID can't be converted to int")
 )
 
 // Login login
 func (a *Auth) Login(email, password string) (models.User, error) {
-	user, err := a.DBActions.GetUserByEmail(a.db, email)
+	user, err := a.DBActions.GetUserByEmail(email)
 	if err != nil {
 		return models.User{}, errBadCredentials
 	}
@@ -41,7 +37,7 @@ func (a *Auth) Register(email, password, name, lastName string) (models.User, er
 		Name:     name,
 		LastName: lastName,
 	}
-	exist, err := a.DBActions.ExistsEmail(a.db, email)
+	exist, err := a.DBActions.ExistsEmail(email)
 	if err != nil {
 		return user, err
 	}
@@ -53,7 +49,7 @@ func (a *Auth) Register(email, password, name, lastName string) (models.User, er
 		return user, err
 	}
 	user.Password = hashedPasswd
-	if err := a.DBActions.InsertUser(a.db, &user); err != nil {
+	if err := a.DBActions.InsertUser(&user); err != nil {
 		return user, err
 	}
 	return user, nil
@@ -63,13 +59,13 @@ func (a *Auth) Register(email, password, name, lastName string) (models.User, er
 func (a *Auth) Me(c *gin.Context) (models.User, error) {
 	userID, exist := c.Get("id")
 	if !exist {
-		return models.User{}, errNoContextID
+		return models.User{}, common.ErrNoContextID
 	}
 	userIDInt, ok := userID.(int)
 	if !ok {
-		return models.User{}, errContextIDInvalid
+		return models.User{}, common.ErrContextIDInvalid
 	}
-	user, err := a.DBActions.GetUserByID(a.db, userIDInt)
+	user, err := a.DBActions.GetUserByID(userIDInt)
 	if err != nil {
 		return models.User{}, err
 	}

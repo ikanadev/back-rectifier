@@ -23,7 +23,7 @@ func (d dbLogger) BeforeQuery(c context.Context, q *pg.QueryEvent) (context.Cont
 // AfterQuery hooks after pg queries
 func (d dbLogger) AfterQuery(c context.Context, q *pg.QueryEvent) error {
 	query, err := q.FormattedQuery()
-	fmt.Println(query)
+	fmt.Println(string(query))
 	return err
 }
 
@@ -53,7 +53,7 @@ func New(dbConf config.DB) (*pg.DB, error) {
 }
 
 // CreateTables function which create Tables
-func CreateTables(db *pg.DB, models ...interface{}) error {
+func CreateTables(db *pg.DB, models []interface{}) error {
 	for _, model := range models {
 		err := db.CreateTable(model, &orm.CreateTableOptions{
 			FKConstraints: true,

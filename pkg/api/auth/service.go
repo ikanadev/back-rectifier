@@ -2,8 +2,6 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg/v10"
-	"github.com/go-pg/pg/v10/orm"
 	"github.com/vkevv/back-rectifier/pkg/models"
 )
 
@@ -16,17 +14,15 @@ type Service interface {
 }
 
 // LoadAuthService function which generates a AuthService
-func LoadAuthService(db *pg.DB, tokenGen TokenGenerator) Auth {
+func LoadAuthService(dbActions DBActions, tokenGen TokenGenerator) Auth {
 	return Auth{
-		db:        db,
 		tokenGen:  tokenGen,
-		DBActions: DB{},
+		DBActions: dbActions,
 	}
 }
 
 // Auth struct who implements Service Interface
 type Auth struct {
-	db        *pg.DB
 	tokenGen  TokenGenerator
 	DBActions DBActions
 }
@@ -38,8 +34,8 @@ type TokenGenerator interface {
 
 // DBActions all DB actions
 type DBActions interface {
-	GetUserByID(db orm.DB, id int) (models.User, error)
-	GetUserByEmail(db orm.DB, email string) (models.User, error)
-	ExistsEmail(db orm.DB, email string) (bool, error)
-	InsertUser(db orm.DB, user *models.User) error
+	GetUserByID(id int) (models.User, error)
+	GetUserByEmail(email string) (models.User, error)
+	ExistsEmail(email string) (bool, error)
+	InsertUser(user *models.User) error
 }

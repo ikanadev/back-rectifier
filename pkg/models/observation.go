@@ -8,5 +8,5 @@ type Observation struct {
 	Text       int       `json:"text"`
 	Author     string    `json:"author"`
 	Document   *Document `json:"document"`
-	DocumentID int
+	DocumentID int       `json:"documentID"`
 }

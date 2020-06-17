@@ -8,5 +8,5 @@ type Document struct {
 	Rectified  bool     `json:"rectified"`
 	AccessCode string   `json:"accessCode"`
 	Project    *Project `json:"project"`
-	ProjectID  int
+	ProjectID  int      `json:"projectID"`
 }
