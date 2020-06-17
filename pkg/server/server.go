@@ -14,12 +14,13 @@ import (
 func New(conf config.Server) *gin.Engine {
 	var server *gin.Engine
 	if conf.Debug {
-		server = gin.Default()
 		gin.SetMode(gin.DebugMode)
+		server = gin.Default()
 		server.Use(gin.ErrorLogger())
 	} else {
-		server = gin.New()
 		gin.SetMode(gin.ReleaseMode)
+		server = gin.New()
+		server.Use(gin.Recovery())
 	}
 	return server
 }
