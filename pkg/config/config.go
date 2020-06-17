@@ -35,11 +35,17 @@ type JWT struct {
 	Key                    string
 }
 
+// AWS all aws config vars
+type AWS struct {
+	BucketName string
+}
+
 // Config main application config
 type Config struct {
 	Server Server `yaml:"server"`
 	DB     DB     `yaml:"database"`
 	JWT    JWT    `yaml:"jwt"`
+	AWS    AWS
 }
 
 func readFile(path string) ([]byte, error) {
@@ -61,5 +67,6 @@ func GetConfig(path string) (Config, error) {
 	config.DB.DBName = os.Getenv("POSTGRES_DB")
 	config.DB.Host = os.Getenv("POSTGRES_HOST")
 	config.JWT.Key = os.Getenv("JWT_SECRET")
+	config.AWS = AWS{BucketName: os.Getenv("AWS_BUCKET_NAME")}
 	return config, nil
 }

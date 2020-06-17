@@ -70,3 +70,35 @@ func (d DB) GetProjectByID(projectID int) (models.Project, error) {
 	err := d.db.Select(&project)
 	return project, err
 }
+
+// InsertDocument insert a document in database
+func (d DB) InsertDocument(document *models.Document) error {
+	return d.db.Insert(document)
+}
+
+// GetProjectDocuments get all documents of a project
+func (d DB) GetProjectDocuments(projectID int) ([]models.Document, error) {
+	documents := make([]models.Document, 0)
+	err := d.db.Model(&documents).Where("project_id = ?", projectID).Order("id ASC").Select()
+	return documents, err
+}
+
+// DeleteDocument deletes a document given an id
+func (d DB) DeleteDocument(documentID int) error {
+	document := models.Document{}
+	document.ID = documentID
+	return d.db.Delete(&document)
+}
+
+// UpdateDocument updates data of a document (id field must be valid)
+func (d DB) UpdateDocument(document *models.Document) error {
+	return d.db.Update(document)
+}
+
+// GetDocumentByID get a document by ID
+func (d DB) GetDocumentByID(documentID int) (models.Document, error) {
+	document := models.Document{}
+	document.ID = documentID
+	err := d.db.Select(&document)
+	return document, err
+}
