@@ -55,7 +55,7 @@ func StartAPI(conf config.Config) error {
 	document.ServeHTTP(&documentService, authGin)
 
 	observationService := observation.LoadObservationService(dbActions)
-	observation.ServeHTTP(&observationService, authGin)
+	observation.ServeHTTP(&observationService, gin)
 
 	if err := server.Start(conf.Server, gin); err != nil {
 		return err

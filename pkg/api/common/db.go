@@ -103,6 +103,20 @@ func (d DB) GetDocumentByID(documentID int) (models.Document, error) {
 	return document, err
 }
 
+// GetDocumentByCode get the first document with the given code
+func (d DB) GetDocumentByCode(code string) (models.Document, error) {
+	document := models.Document{}
+	err := d.db.Model(&document).Where("access_code = ?", code).First()
+	return document, err
+}
+
+// ExistsDocCode check email existence
+func (d DB) ExistsDocCode(code string) (bool, error) {
+	document := models.Document{}
+	document.AccessCode = code
+	return d.db.Model(&document).Where("access_code = ?", document.AccessCode).Exists()
+}
+
 // InsertObservation insert an observation
 func (d DB) InsertObservation(obs *models.Observation) error {
 	return d.db.Insert(obs)

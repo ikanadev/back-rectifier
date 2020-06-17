@@ -21,6 +21,7 @@ type DBActions interface {
 	DeleteDocument(documentID int) error
 	GetDocumentByID(documentID int) (models.Document, error)
 	UpdateDocument(document *models.Document) error
+	ExistsDocCode(code string) (bool, error)
 }
 
 // FileActions an interface to represent file actions

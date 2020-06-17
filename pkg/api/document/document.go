@@ -17,6 +17,20 @@ func (d *Document) Create(projectID int, comment, fileName string, reader io.Rea
 	if err != nil {
 		return document, err
 	}
+	exists, err := d.DBActions.ExistsDocCode(document.AccessCode)
+	if err != nil {
+		return document, err
+	}
+	for exists {
+		err = document.GenerateRandomCode()
+		if err != nil {
+			return document, err
+		}
+		exists, err = d.DBActions.ExistsDocCode(document.AccessCode)
+		if err != nil {
+			return document, err
+		}
+	}
 	url, err := d.FileActions.UploadFile(fileName, reader)
 	if err != nil {
 		return document, err
