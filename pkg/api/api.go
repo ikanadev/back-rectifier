@@ -42,6 +42,7 @@ func StartAPI(conf config.Config) error {
 	dbActions := common.NewDB(db)
 
 	gin := server.New(conf.Server)
+	gin.Use(server.CORSMiddleware())
 	authGin := gin.Group("/v1")
 	authGin.Use(authMD)
 
