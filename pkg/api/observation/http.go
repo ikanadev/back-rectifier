@@ -21,6 +21,25 @@ func ServeHTTP(service Service, ginServer *gin.Engine) {
 	ginServer.POST("/v1/observation/:code", http.PostObservation)
 	ginServer.DELETE("/v1/observation/:id/:code", http.DeleteObservation)
 	ginServer.GET("/v1/document/:id/observations", http.ListObservations)
+	ginServer.GET("/v1/documentrectify/:code", http.RectifyDocument)
+}
+
+// RectifyDocument rectify doc
+func (h HTTP) RectifyDocument(c *gin.Context) {
+	type uriVars struct {
+		Code string `uri:"code" binding:"required"`
+	}
+	uriParams := uriVars{}
+	if err := c.ShouldBindUri(&uriParams); err != nil {
+		server.ErrorResp(c, err)
+		return
+	}
+	err := h.service.RectifyDocument(uriParams.Code)
+	if err != nil {
+		server.ErrorResp(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, nil)
 }
 
 // GetDocByCode returns a document with all observations

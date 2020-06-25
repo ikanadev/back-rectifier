@@ -72,8 +72,18 @@ func (o *Observation) GetDocByCode(code string) (models.Document, error) {
 		return models.Document{}, err
 	}
 	document.Observations = make([]*models.Observation, 0)
-	for _, observation := range observations {
-		document.Observations = append(document.Observations, &observation)
+	for i := range observations {
+		document.Observations = append(document.Observations, &observations[i])
 	}
 	return document, nil
+}
+
+// RectifyDocument changes the rectified value to 1
+func (o *Observation) RectifyDocument(code string) error {
+	document, err := o.DBActions.GetDocumentByCode(code)
+	if err != nil {
+		return err
+	}
+	document.Rectified = true
+	return o.DBActions.UpdateDocument(&document)
 }

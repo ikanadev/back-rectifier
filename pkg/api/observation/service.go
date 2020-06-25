@@ -8,6 +8,7 @@ type Service interface {
 	List(documentID int) ([]models.Observation, error)
 	Delete(observationID int, code string) error
 	GetDocByCode(code string) (models.Document, error)
+	RectifyDocument(code string) error
 }
 
 // DBActions all db actions related to documents
@@ -17,6 +18,7 @@ type DBActions interface {
 	DeleteObservation(obsID int) error
 	GetDocumentByID(documentID int) (models.Document, error)
 	GetDocumentByCode(code string) (models.Document, error)
+	UpdateDocument(document *models.Document) error
 }
 
 // Observation stuct which implements service
