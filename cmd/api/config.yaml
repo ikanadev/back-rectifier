@@ -4,8 +4,8 @@ database:
 server:
   port: 8080
   debug: true
-  readTimeoutSeconds: 10
-  writeTimeoutSeconds: 5
+  readTimeoutSeconds: 30
+  writeTimeoutSeconds: 30
 jwt:
   durationMinutes: 432000
   refreshDurationMinutes: 432000
